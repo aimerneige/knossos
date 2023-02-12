@@ -63,8 +63,10 @@
       <div class="projects-transition" />
       <div class="users-section">
         <div class="section-header">
-          <div class="section-label green">For Players</div>
-          <h2 class="section-tagline">Discover over 5,000 creations</h2>
+          <div class="section-label green">For players</div>
+          <h2 class="section-tagline">
+            Discover {{ statistics.projects }} projects by {{ statistics.authors }} authors
+          </h2>
           <p class="section-description">
             From magical biomes to cursed dungeons, you can be sure to find content to bring your
             gameplay to the next level.
@@ -74,7 +76,7 @@
           <div class="blob-text">
             <h3>Find what you want, quickly and easily</h3>
             <p>
-              Modrinth’s lightning-fast search and powerful filters let you find what you want as
+              Modrinth's lightning-fast search and powerful filters let you find what you want as
               you type.
             </p>
           </div>
@@ -239,7 +241,7 @@
     </div>
     <div class="creator-section">
       <div class="section-header">
-        <div class="section-label blue">For Creators</div>
+        <div class="section-label blue">For creators</div>
         <h2 class="section-tagline">Share your content with the world</h2>
         <p class="section-description">
           Give an online home to your creations and reach a massive audience of dedicated players
@@ -270,7 +272,7 @@
           </div>
           <h4>Discovery</h4>
           <p>
-            Get your project discovered by thousands of users through search, our home page, discord
+            Get your project discovered by thousands of users through search, our home page, Discord
             server, and more ways to come in the future!
           </p>
         </div>
@@ -296,7 +298,7 @@
               </defs>
             </svg>
           </div>
-          <h4>Team Management</h4>
+          <h4>Team management</h4>
           <p>Invite your teammates and manage roles and permissions with ease</p>
         </div>
 
@@ -350,7 +352,7 @@
               </defs>
             </svg>
           </div>
-          <h4>Diverse Ecosystem</h4>
+          <h4>Diverse ecosystem</h4>
           <p>
             Integrate with your build tools through Minotaur for automatic uploads right when you
             release a new version
@@ -379,7 +381,7 @@
             </svg>
           </div>
           <div class="additional-label">Coming soon</div>
-          <h4>Data & Statistics</h4>
+          <h4>Data and statistics</h4>
           <p>Get detailed reports on page views, download counts, and revenue</p>
         </div>
         <div class="feature gradient-border">
@@ -404,7 +406,7 @@
               </defs>
             </svg>
           </div>
-          <h4>Constantly Evolving</h4>
+          <h4>Constantly evolving</h4>
           <p>
             Get the best modding experience possible with constant updates from the Modrinth team
           </p>
@@ -521,13 +523,14 @@ import ATLauncherLogo from '~/assets/images/external/atlauncher.svg'
 import Avatar from '~/components/ui/Avatar'
 import ProjectCard from '~/components/ui/ProjectCard'
 
-const searchQuery = ref('flowers')
+const searchQuery = ref('crafting')
 const sortType = ref('relevance')
 
 const [
   { data: rows },
   { data: searchProjects, refresh: updateSearchProjects },
   { data: notifications },
+  { data: statistics },
 ] = await Promise.all([
   useAsyncData('projects', () => useBaseFetch('projects_random?count=70'), {
     transform: (result) => {
@@ -544,6 +547,9 @@ const [
     }
   ),
   useAsyncData('updatedProjects', () => useBaseFetch(`search?limit=3&query=&index=updated`), {
+    transform: (result) => result.hits,
+  }),
+  useAsyncData('statistics', () => useBaseFetch(`statistics`), {
     transform: (result) => result.hits,
   }),
 ])
